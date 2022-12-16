@@ -1,0 +1,43 @@
+services:
+    jupyter:
+        image: finalimage
+        volumes: 
+            - ./:/Final
+        env_file:
+            - .env
+        ports: 
+            - "8890:8888"
+            - "8080:8080"
+            - "8050:8050"
+        networks:
+            - dbnetwork
+    postgres:
+        image: postgres:latest
+        env_file:
+            - .env
+        volumes:
+            - postgresdata:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        networks:
+            - dbnetwork
+    mongo:
+        image: mongo:latest
+        env_file:
+            - .env
+        volumes:
+            - mongodata:/data/db
+            - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+        ports:
+            - "27017:27017"
+        networks:
+            - dbnetwork
+
+
+volumes:
+    postgresdata:
+    mongodata:
+
+networks:
+    dbnetwork:
+
